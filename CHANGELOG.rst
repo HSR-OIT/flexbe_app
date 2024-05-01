@@ -2,8 +2,8 @@
 Changelog for package flexbe_app
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.0.0 (2024-05-01)
+------------------
 * add state_id and type to state structure; bump to version 4.x.x for UI version
 * this version requires version 3.x.x of the flexbe_behavior_engine 
 
