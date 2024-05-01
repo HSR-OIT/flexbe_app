@@ -1,6 +1,12 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Changelog for package flexbe_app
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* add state_id and type to state structure; bump to version 4.x.x for UI version
+* this version requires version 3.x.x of the flexbe_behavior_engine 
+
 3.1.2 (2023-08-01)
 ------------------
 * cleanup whitespace indents
