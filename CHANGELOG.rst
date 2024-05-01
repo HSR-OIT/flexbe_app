@@ -19,8 +19,8 @@ Changelog for package flexbe_app
 * handle initialize_ros() call for duplicate state names
 * include package name in behavior request (requires latest flexbe_core v2.2.0+)
 
-Forthcoming
------------
+3.1.3 (2024-05-01)
+------------------
 * Add latched handling for topic
 * Merge pull request #92 from pascalauembo/ros2-devel
   Update build_depend
