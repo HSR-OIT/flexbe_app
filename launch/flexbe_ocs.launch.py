@@ -32,7 +32,9 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
-from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotEquals
+from launch.substitutions import EqualsSubstitution
+from launch.substitutions import NotEqualsSubstitution
+from launch.conditions import IfCondition
 
 
 def generate_launch_description():
@@ -41,15 +43,16 @@ def generate_launch_description():
                                     description="Treat FlexBE App as offline editor () Editor mode as default",
                                     default_value="false")
 
-    # Change the default value based on passing a true/false string to offline, or allow setting directly
+    # Change the default value based on passing a true/false string to offline,
+    # or allow setting directly
     offline_arg = DeclareLaunchArgument("offline_arg",
                                         description="Optionally specify FlexBE App offline Editor mode ('--offline')",
                                         default_value="--offline",
-                                        condition=LaunchConfigurationEquals("offline", "true"))
+                                        condition=IfCondition(EqualsSubstitution(LaunchConfiguration("offline"), "true")))
     online_arg = DeclareLaunchArgument("offline_arg",
                                        description="Optionally specify FlexBE App offline Editor mode ('--offline') default=''",
                                        default_value="",
-                                       condition=LaunchConfigurationEquals("offline", "false"))
+                                       condition=IfCondition(EqualsSubstitution(LaunchConfiguration("offline"), "false")))
 
     no_app = DeclareLaunchArgument("no_app", default_value="false")
     use_sim_time = DeclareLaunchArgument("use_sim_time", default_value="False")
@@ -59,11 +62,11 @@ def generate_launch_description():
 
     behavior_mirror = Node(name="behavior_mirror", package="flexbe_mirror",
                            executable="behavior_mirror_sm",
-                           condition=LaunchConfigurationNotEquals("offline_arg", "--offline"))
+                           condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration("offline_arg"), "--offline")))
 
     behavior_launcher = Node(name="behavior_launcher", package="flexbe_widget",
                              executable="be_launcher", output="screen",
-                             condition=LaunchConfigurationNotEquals("offline_arg", "--offline"))
+                             condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration("offline_arg"), "--offline")))
 
     return LaunchDescription([
         offline,
