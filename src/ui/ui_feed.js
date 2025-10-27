@@ -134,9 +134,9 @@ UI.Feed = new (function() {
 	this.initialize = function() {
 		document.getElementById("flexbe_version_label").innerText = chrome.runtime.getManifest().version;
 
-		requestLatestVersion(
-			displayVersionIndicator
-		);
+		// requestLatestVersion(
+		// 	displayVersionIndicator
+		// );
 	}
 
 	this.showAbout = function() {
