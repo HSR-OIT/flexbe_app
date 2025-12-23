@@ -1,10 +1,10 @@
-IO.BehaviorLoader = new (function() {
+IO.BehaviorLoader = new (function () {
 	var that = this;
 
 	var path = require('path');
 
 
-	var parseCode = function(file_content, manifest_data, callback) {
+	var parseCode = function (file_content, manifest_data, callback) {
 		callback = callback || console.error;
 		var parsingResult;
 		try {
@@ -34,7 +34,7 @@ IO.BehaviorLoader = new (function() {
 		callback(error_string);
 	}
 
-	var applyParsingResult = function(result, manifest) {
+	var applyParsingResult = function (result, manifest) {
 		IO.ModelGenerator.generateBehaviorAttributes(result, manifest);
 
 		T.logInfo("Building behavior state machine...");
@@ -48,14 +48,15 @@ IO.BehaviorLoader = new (function() {
 		ROS.getPackagePath(manifest.rosnode_name, (package_path) => {
 			ROS.getPackagePythonPath(manifest.rosnode_name, (python_path) => {
 				if (!python_path.startsWith(package_path)) {
-					Behavior.setReadonly(true);
+					T.logInfo("Behavior source path " + python_path + " differs from package path " + package_path + ". Assuming split-install and allowing edit.");
+					// Behavior.setReadonly(true);
 				}
 				UI.Statemachine.refreshView();
 			});
 		});
 	}
 
-	var resetEditor = function() {
+	var resetEditor = function () {
 		Behavior.resetBehavior();
 		UI.Dashboard.resetAllFields();
 		UI.Statemachine.resetStatemachine();
@@ -65,7 +66,7 @@ IO.BehaviorLoader = new (function() {
 		UI.Panels.setActivePanel(UI.Panels.NO_PANEL);
 	}
 
-	this.loadBehavior = function(manifest, callback) {
+	this.loadBehavior = function (manifest, callback) {
 		T.clearLog();
 		UI.Panels.Terminal.show();
 
@@ -80,7 +81,7 @@ IO.BehaviorLoader = new (function() {
 		});
 	}
 
-	this.loadBehaviorInterface = function(manifest, callback) {
+	this.loadBehaviorInterface = function (manifest, callback) {
 		var file_path = path.join(manifest.codefile_path, manifest.codefile_name);
 		IO.Filesystem.readFile(file_path, (content) => {
 			try {
@@ -93,7 +94,7 @@ IO.BehaviorLoader = new (function() {
 		});
 	}
 
-	this.updateManualSections = function(callback) {
+	this.updateManualSections = function (callback) {
 		var names = Behavior.createNames();
 		var package_name = names.rosnode_name;
 		ROS.getPackagePythonPath(package_name, (folder_path) => {
@@ -120,7 +121,7 @@ IO.BehaviorLoader = new (function() {
 		});
 	}
 
-	this.parseBehaviorSM = function(manifest, callback) {
+	this.parseBehaviorSM = function (manifest, callback) {
 		var file_path = path.join(manifest.codefile_path, manifest.codefile_name);
 		IO.Filesystem.readFile(file_path, (content) => {
 			console.log("Preparing sourcecode of behavior " + manifest.name + "...");
@@ -140,8 +141,8 @@ IO.BehaviorLoader = new (function() {
 		});
 	}
 
-	this.loadBehaviorDependencies = function(manifest, ignore_list) {
-		manifest.contains.forEach(function(be_name) {
+	this.loadBehaviorDependencies = function (manifest, ignore_list) {
+		manifest.contains.forEach(function (be_name) {
 			if (!ignore_list.contains(be_name)) {
 				var lib_entry = WS.Behaviorlib.getByName(be_name);
 				WS.Behaviorlib.updateEntry(lib_entry);
@@ -152,4 +153,4 @@ IO.BehaviorLoader = new (function() {
 		return ignore_list;
 	}
 
-}) ();
+})();
