@@ -54,14 +54,22 @@ def check_for_relevance(pkg_name, pkg_root_path):
 
     return False, False
 
+def workspace_root_from_prefix(path):
+    normalized = os.path.normpath(path)
+    parts = normalized.split(os.sep)
+    if 'install' not in parts:
+        return None
+    install_index = parts.index('install')
+    if install_index == 0:
+        return None
+    return os.sep.join(parts[:install_index]) or os.sep
+
 def find_source_paths(pkg_list):
-    # Try to deduce workspace src root
-    # We look for '/install/' in paths to find workspace root
     src_map = {}
     ws_roots = set()
     for _, path in pkg_list.items():
-        if '/install/' in path:
-            ws_root = path.split('/install/')[0]
+        ws_root = workspace_root_from_prefix(path)
+        if ws_root is not None:
             ws_roots.add(ws_root)
     
     for ws_root in ws_roots:
@@ -255,8 +263,11 @@ try:
     found_path = install_path # Default to install path
     
     # 2. Find workspace root
-    if '/install/' in install_path:
-        ws_root = install_path.split('/install/')[0]
+    normalized_install_path = os.path.normpath(install_path)
+    install_parts = normalized_install_path.split(os.sep)
+    if 'install' in install_parts:
+        install_index = install_parts.index('install')
+        ws_root = os.sep.join(install_parts[:install_index]) or os.sep
         src_root = os.path.join(ws_root, 'src')
         
         # 3. Search src for package

@@ -182,9 +182,9 @@ UI.Menu = new (function() {
 	this.scEditClicked = function() {
 		var names = Behavior.createNames();
 		var package_name = Behavior.getBehaviorPackage();
-		ROS.getPackagePath(package_name, (package_path) => {
+		ROS.getPackagePythonPath(package_name, (package_path) => {
 			try {
-				var file_path = path.join(package_path, 'src', package_name, names.file_name);
+				var file_path = path.join(package_path, names.file_name);
 				var command = UI.Settings.getEditorCommand(file_path).split(' ');
 				var proc = spawn(command[0], command.slice(1));
 				proc.stderr.on('data', (data) => {
